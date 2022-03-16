@@ -45,13 +45,6 @@ const routes: RouteRecordRaw[] = [
         name: 'Quick Quote',
         component: () => import('@/pages/DQuickQuote.vue'),
       },
-
-      {
-        path: '/account-entry',
-        name: 'Account Entry',
-
-        component: () => import('@/pages/DAccountsEntry.vue'),
-      },
       {
         path: '/bookings',
         name: 'Bookings',
