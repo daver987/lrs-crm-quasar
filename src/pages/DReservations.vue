@@ -1,9 +1,7 @@
 <template>
   <q-page padding>
-    <google-autocomplete />
+    <div class="text-h4">This is the Reservations page.</div>
   </q-page>
 </template>
 
-<script setup lang="ts">
-import GoogleAutocomplete from '../components/GoogleAutocomplete.vue'
-</script>
+<script setup lang="ts"></script>

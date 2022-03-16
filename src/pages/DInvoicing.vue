@@ -1,9 +1,10 @@
 <template>
   <q-page padding>
-    <div class="text-h3">This is the Invoicing page.</div>
+    <div class="text-h4">This is the Invoicing page.</div>
+    <pay-pal />
   </q-page>
 </template>
 
-<script setup lang="ts"></script>
-
-<style scoped></style>
+<script setup lang="ts">
+import PayPal from '../components/PayPal.vue'
+</script>

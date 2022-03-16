@@ -1,9 +1,9 @@
 <template>
   <q-page padding>
-    <pay-pal />
+    <google-autocomplete />
   </q-page>
 </template>
 
 <script setup lang="ts">
-import PayPal from 'src/components/PayPal.vue'
+import GoogleAutocomplete from 'src/components/GoogleAutocomplete.vue'
 </script>
