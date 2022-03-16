@@ -1,0 +1,204 @@
+<template>
+  <q-table
+    v-model:fullscreen="isFullscreen"
+    v-model:grid="isGrid"
+    :rows="accounts.rows"
+    :columns="columns"
+    :loading="loading"
+    table-header-class="bg-grey-5"
+    flat
+    square
+    :pagination="pagination"
+    title="Accounts"
+    :row-key="accounts.rows.id"
+  >
+    <template #top>
+      <q-btn
+        :disable="loading"
+        label="Add New"
+        outline
+        color="primary"
+        @click="accounts.openAddAccountModal()"
+      />
+      <q-space />
+      <q-btn
+        v-if="!isGrid"
+        flat
+        :disable="loading"
+        :icon="isFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+        @click="setFullscreen"
+      />
+      <q-btn
+        v-if="!isFullscreen"
+        flat
+        :disable="loading"
+        :icon="isGrid ? 'view_list' : 'grid_view'"
+        @click="setGrid"
+      />
+    </template>
+
+    <template #body-cell-details="props">
+      <q-tr :props="props">
+        <q-td key="details" :props="props">
+          <q-btn icon="pageview" color="positive" size="md" round dense />
+        </q-td>
+      </q-tr>
+    </template>
+
+    <template #body-cell-edit_company="props">
+      <q-tr :props="props">
+        <q-td key="details" :props="props">
+          <div class="q-gutter-sm">
+            <q-btn icon="edit" size="md" dense round color="secondary" />
+            <q-btn icon="delete" size="md" dense round color="negative" />
+          </div>
+        </q-td>
+      </q-tr>
+    </template>
+
+    <template #body-cell-company_phone="props">
+      <q-tr :props="props">
+        <q-td key="company_phone" :props="props">
+          <a
+            :href="`tel:${props.row.company_phone}`"
+            class="text-indigo-4 text-bold"
+            style="text-decoration: none"
+            >{{ props.row.company_phone }}</a
+          >
+        </q-td>
+      </q-tr>
+    </template>
+
+    <!--    <template #body-cell-company_email="props">-->
+    <!--      <q-tr :props="props">-->
+    <!--        <q-td key="company_email" :props="props">-->
+    <!--          <a :href="`mailto:${props.row.company_email}`" class="text-blue-7">{{-->
+    <!--            props.row.company_email-->
+    <!--          }}</a>-->
+    <!--        </q-td>-->
+    <!--      </q-tr>-->
+    <!--    </template>-->
+  </q-table>
+  <add-account-modal :open-value="isOpen" @hide-modal="isOpen = false" />
+</template>
+
+<script setup lang="ts">
+import { onMounted, ref, reactive } from 'vue'
+import { useAuthStore } from '../stores/useAuth'
+import { useAccounts } from '../stores/useAccounts'
+import AddAccountModal from 'components/AddAccountModal.vue'
+
+const isGrid = ref(false)
+
+function setGrid() {
+  isGrid.value = !isGrid.value
+}
+
+const isOpen = ref(false)
+
+const isFullscreen = ref(false)
+
+function setFullscreen() {
+  isFullscreen.value = !isFullscreen.value
+  console.log('setFullscreen')
+}
+
+onMounted(() => {
+  getRows()
+  console.log(getRows())
+})
+
+const { supabase } = useAuthStore()
+const store = reactive({
+  user: null,
+})
+const loading = ref(false)
+
+const accounts = useAccounts()
+
+async function getRows() {
+  try {
+    loading.value = true
+    store.user = supabase.auth.user()
+
+    let { data, error, status } = await supabase
+      .from('accounts')
+      .select(
+        'id, company_name, company_address, company_phone, company_email, company_account_number'
+      )
+      .eq('user_id', store.user.id)
+
+    if (error && status !== 406) {
+      console.log(error)
+      return
+    }
+
+    if (data) {
+      accounts.rows = data
+      console.log(accounts.rows)
+    }
+  } catch (error) {
+    alert(error.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+const pagination = {
+  rowsPerPage: 10,
+  sortBy: 'account_number',
+}
+
+const columns = [
+  {
+    name: 'account_number',
+    required: true,
+    label: 'Account #',
+    align: 'left',
+    field: 'company_account_number',
+    classes: 'text-red-6 text-bold',
+    format: (val) => `${val}`,
+  },
+  {
+    name: 'details',
+    align: 'center',
+    label: 'Details',
+    field: 'details',
+    sortable: false,
+  },
+  {
+    name: 'company_name',
+    align: 'left',
+    label: 'Company Name',
+    field: 'company_name',
+    sortable: true,
+  },
+  {
+    name: 'company_address',
+    align: 'left',
+    label: 'Company Address',
+    field: 'company_address',
+    sortable: true,
+  },
+  {
+    name: 'company_phone',
+    align: 'left',
+    label: 'Company Phone',
+    field: 'company_phone',
+    sortable: true,
+  },
+  {
+    name: 'company_email',
+    align: 'left',
+    label: 'Company Email',
+    field: 'company_email',
+    sortable: true,
+  },
+  {
+    name: 'edit_company',
+    align: 'left',
+    field: 'edit_company',
+    sortable: false,
+  },
+]
+</script>
