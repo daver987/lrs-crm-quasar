@@ -395,10 +395,6 @@ const options = reactive([
   },
 ])
 
-// function grandTotal(total) {
-//   return total * 1.33
-// }
-
 const {
   originInput,
   originAutocomplete,
