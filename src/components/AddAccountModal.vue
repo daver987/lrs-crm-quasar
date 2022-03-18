@@ -1,10 +1,10 @@
 <template>
   <q-dialog v-model="isOpen">
-    <q-layout view="hHh lpR fFf" container class="bg-white h-2xl">
+    <q-layout view="hHh lpR fFf" container class="bg-white">
       <q-page-container>
         <q-page>
           <q-card flat class="bg-white col q-pa-sm">
-            <q-list class="space-y-2">
+            <q-list class="">
               <!-- Company Entry -->
 
               <q-card-section class="row">
@@ -86,8 +86,8 @@
                 </template>
 
                 <template v-if="selectedAccountType === 'individual'">
-                  <q-card-section class="col q-gutter-md">
-                    <div class="row gap-2">
+                  <q-card-section class="col">
+                    <div class="row q-gutter-sm">
                       <q-select
                         v-model="individualPrefix"
                         bg-color="white"
@@ -99,6 +99,9 @@
                         name="individual_name_prefix"
                         for="individual_name_prefix"
                         :options="prefs.namePrefix"
+                        options-dense
+                        transition-show="fade"
+                        transition-hide="fade"
                       />
                       <q-input
                         v-model="individualFirstName"

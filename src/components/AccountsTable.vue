@@ -8,6 +8,7 @@
     table-header-class="bg-grey-5"
     flat
     square
+    dense
     :pagination="pagination"
     title="Accounts"
     :row-key="accounts.rows.id"
@@ -40,7 +41,7 @@
     <template #body-cell-details="props">
       <q-tr :props="props">
         <q-td key="details" :props="props">
-          <q-btn icon="pageview" color="positive" size="md" round dense />
+          <q-btn icon="pageview" color="positive" size="sm" round />
         </q-td>
       </q-tr>
     </template>
@@ -49,8 +50,8 @@
       <q-tr :props="props">
         <q-td key="details" :props="props">
           <div class="q-gutter-sm">
-            <q-btn icon="edit" size="md" dense round color="secondary" />
-            <q-btn icon="delete" size="md" dense round color="negative" />
+            <q-btn icon="edit" size="sm" round color="secondary" />
+            <q-btn icon="delete" size="sm" round color="negative" />
           </div>
         </q-td>
       </q-tr>
