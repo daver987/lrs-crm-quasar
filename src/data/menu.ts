@@ -25,16 +25,22 @@ export const menu = () => {
       id: 4,
     },
     {
+      name: 'Dispatch',
+      to: '/dispatch',
+      icon: 'directions_car',
+      id: 5,
+    },
+    {
       name: 'Invoicing',
       to: '/invoicing',
       icon: 'receipt',
-      id: 5,
+      id: 6,
     },
     {
       name: 'My Profile',
       to: '/profile',
       icon: 'group',
-      id: 6,
+      id: 7,
     },
   ]
 }

@@ -185,6 +185,9 @@
                     name="company_payment_method"
                     for="company_payment_method"
                     :options="prefs.paymentMethod"
+                    options-dense
+                    transition-show="fade"
+                    transition-hide="fade"
                   />
                   <q-select
                     v-model="companyPaymentTerms"
@@ -197,6 +200,9 @@
                     name="company_payment_terms"
                     for="company_payment_terms"
                     :options="prefs.paymentTerms"
+                    options-dense
+                    transition-show="fade"
+                    transition-hide="fade"
                   />
                 </q-card-section>
 

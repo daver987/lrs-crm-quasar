@@ -31,6 +31,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/DReservations.vue'),
       },
       {
+        path: '/dispatch',
+        name: 'Dispatch',
+        component: () => import('@/pages/DDispatch.vue'),
+      },
+      {
         path: '/invoicing',
         name: 'Invoicing',
         component: () => import('@/pages/DInvoicing.vue'),

@@ -25,6 +25,9 @@
             class="col"
             dense
             hide-bottom-space
+            options-dense
+            transition-show="fade"
+            transition-hide="fade"
           >
           </q-select>
 
@@ -141,6 +144,9 @@
             outlined
             dense
             hide-bottom-space
+            options-dense
+            transition-show="fade"
+            transition-hide="fade"
           />
 
           <q-select
@@ -151,7 +157,10 @@
             class="col"
             outlined
             dense
+            options-dense
             hide-bottom-space
+            transition-show="fade"
+            transition-hide="fade"
           />
         </q-card-section>
         <q-card-section class="row q-gutter-sm">
@@ -304,7 +313,7 @@ import { storeToRefs } from 'pinia'
 import { useCounterStore } from '../stores/counter'
 import { usePriceCalculator } from '../stores/usePriceCalculator'
 import { data } from '../data/useData'
-import { ref, computed, reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { loader } from '../composables/useGoogleMap'
 import Alert from './MyAlert.vue'
 

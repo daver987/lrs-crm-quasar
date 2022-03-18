@@ -53,7 +53,7 @@ export const data = () => {
       'Paypal',
       'E-Transfer',
     ],
-    paymentTerms: ['On Completion', 'Net 15', 'Net 30', 'Net 60', 'Net 90'],
+    paymentTerms: ['Due On Receipt', 'Net 15', 'Net 30', 'Net 60'],
     tripType: ['In House', 'Farm In', 'Farm Out'],
     testData: {},
   }

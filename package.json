@@ -13,32 +13,32 @@
     "build": "quasar build"
   },
   "dependencies": {
-    "@quasar/extras": "^1.13.1",
-    "@supabase/supabase-js": "^1.28.5",
+    "@quasar/extras": "^1.13.3",
+    "@supabase/supabase-js": "^1.31.1",
     "@vueauth/supabase": "^1.0.0-alpha.20",
-    "pinia": "^2.0.11",
-    "quasar": "^2.6.0",
-    "vue": "^3.0.0",
-    "vue-router": "^4.0.0"
+    "pinia": "^2.0.12",
+    "quasar": "^2.6.1",
+    "vue": "^3.2.31",
+    "vue-router": "^4.0.14"
   },
   "devDependencies": {
-    "@googlemaps/js-api-loader": "^1.13.8",
+    "@googlemaps/js-api-loader": "^1.13.9",
     "@paypal/paypal-js": "^5.0.2",
-    "@quasar/app-vite": "^1.0.0-beta.3",
+    "@quasar/app-vite": "^1.0.0-beta.5",
     "@types/google.maps": "^3.48.2",
-    "@types/node": "^12.20.21",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
-    "@vueuse/core": "^8.0.0",
-    "autoprefixer": "^10.4.2",
-    "eslint": "^8.10.0",
-    "eslint-config-prettier": "^8.1.0",
+    "@types/node": "^14.18.12",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "@vueuse/core": "^8.1.1",
+    "autoprefixer": "^10.4.4",
+    "eslint": "^8.11.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-vue": "^8.5.0",
-    "prettier": "^2.5.1",
-    "typescript": "^4.5.4"
+    "prettier": "^2.6.0",
+    "typescript": "^4.6.2"
   },
   "engines": {
-    "node": ">= 12.22.1",
+    "node": ">= 14.18.12",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
   }
