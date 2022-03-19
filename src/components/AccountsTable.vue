@@ -12,13 +12,17 @@
     :pagination="pagination"
     title="Accounts"
     :row-key="accounts.rows.id"
+    card-style="border: 1px solid #e0e0e0;"
+    c
   >
+    >
     <template #top>
       <q-btn
         :disable="loading"
         label="Add New"
         outline
         color="primary"
+        size="sm"
         @click="accounts.openAddAccountModal()"
       />
       <q-space />
@@ -27,6 +31,7 @@
         flat
         :disable="loading"
         :icon="isFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+        size="sm"
         @click="setFullscreen"
       />
       <q-btn
@@ -34,51 +39,36 @@
         flat
         :disable="loading"
         :icon="isGrid ? 'view_list' : 'grid_view'"
+        size="sm"
         @click="setGrid"
       />
     </template>
 
     <template #body-cell-details="props">
-      <q-tr :props="props">
-        <q-td key="details" :props="props">
-          <q-btn icon="pageview" color="positive" size="sm" round />
-        </q-td>
-      </q-tr>
+      <q-td key="details" :props="props" auto-width>
+        <q-btn icon="pageview" color="positive" size="sm" round />
+      </q-td>
     </template>
 
     <template #body-cell-edit_company="props">
-      <q-tr :props="props">
-        <q-td key="details" :props="props">
-          <div class="q-gutter-sm">
-            <q-btn icon="edit" size="sm" round color="secondary" />
-            <q-btn icon="delete" size="sm" round color="negative" />
-          </div>
-        </q-td>
-      </q-tr>
+      <q-td key="details" :props="props" auto-width>
+        <div class="q-gutter-sm">
+          <q-btn icon="edit" size="sm" round color="secondary" />
+          <q-btn icon="delete" size="sm" round color="negative" />
+        </div>
+      </q-td>
     </template>
 
     <template #body-cell-company_phone="props">
-      <q-tr :props="props">
-        <q-td key="company_phone" :props="props">
-          <a
-            :href="`tel:${props.row.company_phone}`"
-            class="text-indigo-4 text-bold"
-            style="text-decoration: none"
-            >{{ props.row.company_phone }}</a
-          >
-        </q-td>
-      </q-tr>
+      <q-td key="company_phone" :props="props" auto-width>
+        <a
+          :href="`tel:${props.row.company_phone}`"
+          class="text-indigo-4 text-bold"
+          style="text-decoration: none"
+          >{{ props.row.company_phone }}</a
+        >
+      </q-td>
     </template>
-
-    <!--    <template #body-cell-company_email="props">-->
-    <!--      <q-tr :props="props">-->
-    <!--        <q-td key="company_email" :props="props">-->
-    <!--          <a :href="`mailto:${props.row.company_email}`" class="text-blue-7">{{-->
-    <!--            props.row.company_email-->
-    <!--          }}</a>-->
-    <!--        </q-td>-->
-    <!--      </q-tr>-->
-    <!--    </template>-->
   </q-table>
   <add-account-modal :open-value="isOpen" @hide-modal="isOpen = false" />
 </template>
@@ -146,7 +136,7 @@ async function getRows() {
 }
 
 const pagination = {
-  rowsPerPage: 10,
+  rowsPerPage: 15,
   sortBy: 'account_number',
 }
 
