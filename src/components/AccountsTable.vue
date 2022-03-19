@@ -5,15 +5,14 @@
     :rows="accounts.rows"
     :columns="columns"
     :loading="loading"
-    table-header-class="bg-grey-5"
-    flat
+    table-header-class="bg-grey-5 q-py-sm"
     square
+    flat
     dense
     :pagination="pagination"
     title="Accounts"
     :row-key="accounts.rows.id"
     card-style="border: 1px solid #e0e0e0;"
-    c
   >
     >
     <template #top>
@@ -56,6 +55,17 @@
           <q-btn icon="edit" size="sm" round color="secondary" />
           <q-btn icon="delete" size="sm" round color="negative" />
         </div>
+      </q-td>
+    </template>
+
+    <template #body-cell-company_email="props">
+      <q-td key="company_phone" :props="props" auto-width>
+        <a
+          :href="`mailto:${props.row.company_email}`"
+          class="text-grey-9"
+          style="text-decoration: none"
+          >{{ props.row.company_email }}</a
+        >
       </q-td>
     </template>
 
