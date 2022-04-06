@@ -5,8 +5,8 @@ import { useCounterStore } from '../stores/counter'
 import { usePriceCalculator } from '../stores/usePriceCalculator'
 import { data } from '../data/useData'
 import { ref, reactive } from 'vue'
-import { loader } from '../composables/useGoogleMap'
 import Alert from './MyAlert.vue'
+import { loader } from '../composables/loader'
 
 const isClosed = ref(true)
 const total = usePriceCalculator()
@@ -134,7 +134,6 @@ class AutocompleteDirectionsHandler {
     this.directionsService = new google.maps.DirectionsService()
     this.directionsRenderer = new google.maps.DirectionsRenderer()
     this.directionsRenderer.setMap(map)
-    // console.log(map)
 
     originInput.value = document.getElementById('origin-input')
     originAutocomplete.value = new google.maps.places.Autocomplete(

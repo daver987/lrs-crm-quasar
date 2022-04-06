@@ -1,88 +1,3 @@
-<template>
-  <q-table
-    v-model:fullscreen="isFullscreen"
-    v-model:grid="isGrid"
-    :rows="accounts.rows"
-    :columns="columns"
-    :loading="loading"
-    table-header-class="bg-grey-5 q-py-sm"
-    square
-    flat
-    dense
-    :pagination="pagination"
-    title="Accounts"
-    :row-key="accounts.rows.id"
-    card-style="border: 1px solid #e0e0e0;"
-  >
-    >
-    <template #top>
-      <q-btn
-        :disable="loading"
-        label="Add New"
-        outline
-        color="primary"
-        size="sm"
-        @click="accounts.openAddAccountModal()"
-      />
-      <q-space />
-      <q-btn
-        v-if="!isGrid"
-        flat
-        :disable="loading"
-        :icon="isFullscreen ? 'fullscreen_exit' : 'fullscreen'"
-        size="sm"
-        @click="setFullscreen"
-      />
-      <q-btn
-        v-if="!isFullscreen"
-        flat
-        :disable="loading"
-        :icon="isGrid ? 'view_list' : 'grid_view'"
-        size="sm"
-        @click="setGrid"
-      />
-    </template>
-
-    <template #body-cell-details="props">
-      <q-td key="details" :props="props" auto-width>
-        <q-btn icon="pageview" color="positive" size="sm" round />
-      </q-td>
-    </template>
-
-    <template #body-cell-edit_company="props">
-      <q-td key="details" :props="props" auto-width>
-        <div class="q-gutter-sm">
-          <q-btn icon="edit" size="sm" round color="secondary" />
-          <q-btn icon="delete" size="sm" round color="negative" />
-        </div>
-      </q-td>
-    </template>
-
-    <template #body-cell-company_email="props">
-      <q-td key="company_phone" :props="props" auto-width>
-        <a
-          :href="`mailto:${props.row.company_email}`"
-          class="text-grey-9"
-          style="text-decoration: none"
-          >{{ props.row.company_email }}</a
-        >
-      </q-td>
-    </template>
-
-    <template #body-cell-company_phone="props">
-      <q-td key="company_phone" :props="props" auto-width>
-        <a
-          :href="`tel:${props.row.company_phone}`"
-          class="text-indigo-4 text-bold"
-          style="text-decoration: none"
-          >{{ props.row.company_phone }}</a
-        >
-      </q-td>
-    </template>
-  </q-table>
-  <add-account-modal :open-value="isOpen" @hide-modal="isOpen = false" />
-</template>
-
 <script setup lang="ts">
 import { onMounted, ref, reactive } from 'vue'
 import { useAuthStore } from '../stores/useAuth'
@@ -201,3 +116,88 @@ const columns = [
   },
 ]
 </script>
+
+<template>
+  <q-table
+    v-model:fullscreen="isFullscreen"
+    v-model:grid="isGrid"
+    :rows="accounts.rows"
+    :columns="columns"
+    :loading="loading"
+    table-header-class="bg-grey-5 q-py-sm"
+    square
+    flat
+    dense
+    :pagination="pagination"
+    title="Accounts"
+    :row-key="accounts.rows.id"
+    card-style="border: 1px solid #e0e0e0;"
+  >
+    >
+    <template #top>
+      <q-btn
+        :disable="loading"
+        label="Add New"
+        outline
+        color="primary"
+        size="sm"
+        @click="accounts.openAddAccountModal()"
+      />
+      <q-space />
+      <q-btn
+        v-if="!isGrid"
+        flat
+        :disable="loading"
+        :icon="isFullscreen ? 'fullscreen_exit' : 'fullscreen'"
+        size="sm"
+        @click="setFullscreen"
+      />
+      <q-btn
+        v-if="!isFullscreen"
+        flat
+        :disable="loading"
+        :icon="isGrid ? 'view_list' : 'grid_view'"
+        size="sm"
+        @click="setGrid"
+      />
+    </template>
+
+    <template #body-cell-details="props">
+      <q-td key="details" :props="props" auto-width>
+        <q-btn icon="pageview" color="positive" size="sm" round />
+      </q-td>
+    </template>
+
+    <template #body-cell-edit_company="props">
+      <q-td key="details" :props="props" auto-width>
+        <div class="q-gutter-sm">
+          <q-btn icon="edit" size="sm" round color="secondary" />
+          <q-btn icon="delete" size="sm" round color="negative" />
+        </div>
+      </q-td>
+    </template>
+
+    <template #body-cell-company_email="props">
+      <q-td key="company_phone" :props="props" auto-width>
+        <a
+          :href="`mailto:${props.row.company_email}`"
+          class="text-grey-9"
+          style="text-decoration: none"
+          >{{ props.row.company_email }}</a
+        >
+      </q-td>
+    </template>
+
+    <template #body-cell-company_phone="props">
+      <q-td key="company_phone" :props="props" auto-width>
+        <a
+          :href="`tel:${props.row.company_phone}`"
+          class="text-indigo-4 text-bold"
+          style="text-decoration: none"
+          >{{ props.row.company_phone }}</a
+        >
+      </q-td>
+    </template>
+  </q-table>
+  <add-account-modal :open-value="isOpen" @hide-modal="isOpen = false" />
+</template>

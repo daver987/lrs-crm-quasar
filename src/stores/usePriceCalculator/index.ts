@@ -23,7 +23,6 @@ export const usePriceCalculator = defineStore({
   getters: {
     gratuity: (state) => state.subTotal * 0.2,
     taxes: (state) => state.subTotal * 0.13,
-    // grandTotal: (state) => state.subtotal * 0.13,
   },
 
   actions: {

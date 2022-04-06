@@ -359,8 +359,8 @@ import { storeToRefs } from 'pinia'
 import { useCounterStore } from '../stores/counter'
 import { usePriceCalculator } from '../stores/usePriceCalculator'
 import { data } from '../data/useData'
-import { loader } from '../composables/useGoogleMap'
 import MyAlert from 'components/MyAlert.vue'
+import { loader } from 'src/composables/loader'
 
 //TODO: Add price calculation function possible composable, add enable and disable buttons
 

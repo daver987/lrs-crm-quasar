@@ -1,3 +1,58 @@
+<script setup lang="ts">
+import { useAccounts } from '../stores/useAccounts'
+import { storeToRefs } from 'pinia'
+import { watch, ref } from 'vue'
+import { data } from '../data/useData'
+
+const accounts = useAccounts()
+const prefs = data()
+
+const checked = ref(false)
+
+watch(checked, (val) => {
+  if (val) {
+    selectedContactNamePrefix.value = individualPrefix.value
+    contactFirstName.value = individualFirstName.value
+    contactLastName.value = individualLastName.value
+    contactPhone.value = individualPhone.value
+    contactEmail.value = individualEmail.value
+    contactNotes.value = individualNotes.value
+  } else {
+    alert('Its Not Copied')
+  }
+})
+
+const {
+  companyName,
+  companyAddress,
+  companyPhone,
+  companyEmail,
+  companyNotes,
+  companyPaymentMethod,
+  companyPaymentTerms,
+  companyPaymentInfo,
+  contactPaymentMethod,
+  individualPrefix,
+  individualFirstName,
+  individualLastName,
+  individualEmail,
+  individualPhone,
+  individualNotes,
+  individualAddress,
+  contactPaymentTerms,
+  contactPaymentInfo,
+  selectedContactNamePrefix,
+  contactFirstName,
+  contactLastName,
+  contactPhone,
+  contactEmail,
+  contactNotes,
+  contactAddFinancialDetails,
+  selectedContactType,
+  selectedAccountType,
+} = storeToRefs(accounts)
+</script>
+
 <template>
   <q-form class="bg-white row q-gutter-md" flat @submit="accounts.saveAccount">
     <!-- column one -->
@@ -448,58 +503,3 @@
     </q-card>
   </q-form>
 </template>
-
-<script setup lang="ts">
-import { useAccounts } from '../stores/useAccounts'
-import { storeToRefs } from 'pinia'
-import { watch, ref } from 'vue'
-import { data } from '../data/useData'
-
-const accounts = useAccounts()
-const prefs = data()
-
-const checked = ref(false)
-
-watch(checked, (val) => {
-  if (val) {
-    selectedContactNamePrefix.value = individualPrefix.value
-    contactFirstName.value = individualFirstName.value
-    contactLastName.value = individualLastName.value
-    contactPhone.value = individualPhone.value
-    contactEmail.value = individualEmail.value
-    contactNotes.value = individualNotes.value
-  } else {
-    alert('Its Not Copied')
-  }
-})
-
-const {
-  companyName,
-  companyAddress,
-  companyPhone,
-  companyEmail,
-  companyNotes,
-  companyPaymentMethod,
-  companyPaymentTerms,
-  companyPaymentInfo,
-  contactPaymentMethod,
-  individualPrefix,
-  individualFirstName,
-  individualLastName,
-  individualEmail,
-  individualPhone,
-  individualNotes,
-  individualAddress,
-  contactPaymentTerms,
-  contactPaymentInfo,
-  selectedContactNamePrefix,
-  contactFirstName,
-  contactLastName,
-  contactPhone,
-  contactEmail,
-  contactNotes,
-  contactAddFinancialDetails,
-  selectedContactType,
-  selectedAccountType,
-} = storeToRefs(accounts)
-</script>
