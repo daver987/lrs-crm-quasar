@@ -77,9 +77,20 @@ module.exports = configure(function (/* ctx */) {
       },
       // viteVuePluginOptions: {},
 
-      // vitePlugins: [
-      //
-      // ],
+      vitePlugins: [
+        [
+          'unplugin-auto-import/vite',
+          {
+            include: [
+              /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+              /\.vue$/,
+              /\.vue\?vue/, // .vue
+              /\.md$/, // .md
+            ],
+            imports: ['vue', 'vue-router', 'pinia', 'quasar'],
+          },
+        ],
+      ],
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer

@@ -75,6 +75,7 @@
 
         <q-card-section class="row q-gutter-sm">
           <q-input
+            id="name-input"
             v-model="firstName"
             bg-color="white"
             class="col"
@@ -82,6 +83,8 @@
             label="Client Name"
             dense
             hide-bottom-space
+            name="name-input"
+            for="name-input"
           />
         </q-card-section>
         <q-card-section class="row q-gutter-sm">
@@ -317,6 +320,9 @@ import { ref, reactive } from 'vue'
 import { loader } from '../composables/useGoogleMap'
 import Alert from './MyAlert.vue'
 
+// import { QInput } from 'quasar'
+//
+// console.log(QInput)
 //TODO: Add price calculation function possible composable, add enable and disable buttons
 
 const isClosed = ref(true)
@@ -430,14 +436,14 @@ loader.load().then(() => {
 })
 
 class AutocompleteDirectionsHandler {
-  map
-  originPlaceId
-  destinationPlaceId
-  travelMode
-  directionsService
-  directionsRenderer
+  map: unknown
+  originPlaceId: string
+  destinationPlaceId: string
+  travelMode: google.maps.TravelMode
+  directionsService: google.maps.DirectionsService
+  directionsRenderer: google.maps.DirectionsRenderer
 
-  constructor(map) {
+  constructor(map: google.maps.Map) {
     this.map = map
     this.originPlaceId = ''
     this.destinationPlaceId = ''
@@ -445,6 +451,7 @@ class AutocompleteDirectionsHandler {
     this.directionsService = new google.maps.DirectionsService()
     this.directionsRenderer = new google.maps.DirectionsRenderer()
     this.directionsRenderer.setMap(map)
+    // console.log(map)
 
     originInput.value = document.getElementById('origin-input')
     originAutocomplete.value = new google.maps.places.Autocomplete(
@@ -465,7 +472,14 @@ class AutocompleteDirectionsHandler {
 
   // Sets a listener on a radio button to change the filter type on Places
   // Autocomplete.
-  setupPlaceChangedListener(autocomplete, mode) {
+  setupPlaceChangedListener(
+    autocomplete: {
+      bindTo: (arg0: string, arg1: unknown) => void
+      addListener: (arg0: string, arg1: () => void) => void
+      getPlace: () => unknown
+    },
+    mode: string
+  ) {
     autocomplete.bindTo('bounds', this.map)
     autocomplete.addListener('place_changed', () => {
       place.value = autocomplete.getPlace()
@@ -503,7 +517,7 @@ class AutocompleteDirectionsHandler {
           selectedOriginAddress.value = response.routes[0].legs[0].start_address
           selectedDestinationAddress.value =
             response.routes[0].legs[0].end_address
-          console.log(response.routes)
+          // console.log(response.routes[0].legs[0].steps)
         } else {
           window.alert('Directions request failed due to ' + status)
         }

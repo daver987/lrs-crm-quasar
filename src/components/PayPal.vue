@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex-center">
-    <q-card class="mx-auto max-w-xl">
+    <q-card class="mx-auto" style="max-width: 36rem">
       <q-card-section>
         <div id="paypal-button" ref="myPaypal"></div>
       </q-card-section>
@@ -8,7 +8,7 @@
   </q-page>
 </template>
 <script setup lang="ts">
-import { loadScript } from '@paypal/paypal-js'
+import { loadScript, PayPalNamespace } from '@paypal/paypal-js'
 import { onMounted, ref } from 'vue'
 
 const loadScriptOptions = {
@@ -24,14 +24,16 @@ const loadScriptOptions = {
 }
 
 const myPaypal = ref(null)
+
 onMounted(() => {
   loadPaypal()
 })
 
 const loadPaypal = async () => {
-  let paypal
+  let paypal: PayPalNamespace
   try {
     paypal = await loadScript(loadScriptOptions)
+    console.log(paypal.version)
   } catch (error) {
     console.error('failed to load the PayPal JS SDK script', error)
   }

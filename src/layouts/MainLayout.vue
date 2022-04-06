@@ -8,11 +8,12 @@ import { useAccounts } from '../stores/useAccounts'
 import { useUserStore } from '../stores/useUserStore'
 import { menu } from '../data/menu'
 
+// console.log(supabase.auth.currentUser.identities[0].id)
 const price = usePriceCalculator()
 const accounts = useAccounts()
 const user = useUserStore()
 const menuItems = menu()
-
+// console.log(user)
 const src: Ref<string> = ref('')
 const path: Ref<string> = ref('')
 
@@ -21,8 +22,10 @@ const downloadImage = async () => {
     const { data, error } = await supabase.storage
       .from('avatars')
       .download(path.value)
+
     if (error) throw error
     src.value = URL.createObjectURL(data)
+    console.log(src.value)
   } catch (error) {
     console.error('Error downloading image: ', error.message)
   }
@@ -50,7 +53,7 @@ function toggleLeftDrawer() {
       <q-toolbar>
         <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
         <q-toolbar-title></q-toolbar-title>
-        <span class="text-h6 text-primary text-bold text-uppercase">{{
+        <span class="text-primary text-bold text-uppercase text-h6">{{
           $route.name
         }}</span>
         <q-space />

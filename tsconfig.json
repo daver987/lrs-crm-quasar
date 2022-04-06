@@ -11,10 +11,13 @@
       "pages/*": ["src/pages/*"],
       "assets/*": ["src/assets/*"],
       "boot/*": ["src/boot/*"],
-      "stores/*": ["src/stores/*"]
-    }
+      "stores/*": ["src/stores/*"],
+      "test/*": ["test/*"]
+    },
+    "types": ["vite/client", "node", "vitest/globals"]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "auto-imports.d.ts",
+    "test/**.ts"],
   "references": [
     {
       "path": "./tsconfig.node.json"

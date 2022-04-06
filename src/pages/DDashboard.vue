@@ -4,4 +4,6 @@
   </q-page>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+//scripts go here
+</script>
