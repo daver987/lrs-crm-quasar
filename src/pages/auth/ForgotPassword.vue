@@ -22,6 +22,7 @@ async function onSubmit() {
   loading.value = false
 }
 </script>
+
 <template>
   <q-card-section>
     <div class="font-bold text-center q-mb-md text-h6 text-grey-9">

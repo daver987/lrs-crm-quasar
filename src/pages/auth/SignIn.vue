@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import AuthForm from '../../components/AuthForm.vue'
+</script>
+
 <template>
   <auth-form
     :sign-up="false"
@@ -18,7 +22,3 @@
     >
   </auth-form>
 </template>
-
-<script setup lang="ts">
-import AuthForm from '../../components/AuthForm.vue'
-</script>

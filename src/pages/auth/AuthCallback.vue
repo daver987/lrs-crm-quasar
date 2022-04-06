@@ -17,6 +17,7 @@ onMounted(() => {
   }
 })
 </script>
+
 <template>
   <loading-icon class="mx-auto w-16" />
 </template>

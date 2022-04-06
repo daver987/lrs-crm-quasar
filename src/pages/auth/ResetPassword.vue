@@ -38,6 +38,7 @@ async function onSubmit() {
   loading.value = false
 }
 </script>
+
 <template>
   <q-card-section>
     <h2 class="font-bold mb-2 text-2xl text-grey-9">Reset Password</h2>
