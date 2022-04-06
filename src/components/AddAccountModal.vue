@@ -1,3 +1,79 @@
+<script setup lang="ts">
+import { supabase } from '../services/supabase'
+import { useAccounts } from '../stores/useAccounts'
+import { storeToRefs } from 'pinia'
+import { data } from '../data/useData'
+import { onMounted, ref } from 'vue'
+
+defineProps({
+  openValue: {
+    default: false,
+    type: Boolean,
+  },
+})
+
+const accounts = useAccounts()
+const prefs = data()
+
+const onSubmit = () => {
+  accounts.saveAccount()
+  onReset()
+}
+const onReset = () => {
+  accounts.$reset()
+  accounts.getRows()
+}
+
+const {
+  isOpen,
+  companyName,
+  companyAddress,
+  companyPhone,
+  companyEmail,
+  companyNotes,
+  companyPaymentMethod,
+  companyPaymentTerms,
+  companyAccountNumber,
+  individualFirstName,
+  individualLastName,
+  individualEmail,
+  individualPhone,
+} = storeToRefs(accounts)
+
+//get current account number from supabase
+const loading = ref(true)
+const user = ref(null)
+async function getAccountNumber() {
+  try {
+    loading.value = true
+    user.value = supabase.auth.user()
+    const { data, error, status } = await supabase
+      .from('profiles')
+      .select('account_number')
+      .eq('user_id', user.value.id)
+      .single()
+
+    if (error && status !== 406) {
+      console.log(error)
+      return
+    }
+
+    if (data) {
+      const { account_number } = data
+      companyAccountNumber.value = account_number
+      console.log(account_number)
+    }
+  } catch (error) {
+    alert(error.message)
+  } finally {
+    loading.value = false
+  }
+}
+onMounted(() => {
+  getAccountNumber()
+})
+</script>
+
 <template>
   <q-dialog v-model="isOpen">
     <q-layout view="hHh lpR fFf" container class="bg-white">
@@ -21,9 +97,7 @@
 
               <q-space /><q-btn v-close-popup icon="close" flat round dense />
             </q-toolbar>
-            <!-- <q-card-section class="q-py-none">
-              <div class="text-bold">Company Info</div>
-            </q-card-section> -->
+
             <q-card-section class="col q-gutter-md">
               <q-input
                 v-model="companyName"
@@ -207,78 +281,3 @@
     </q-layout>
   </q-dialog>
 </template>
-
-<script setup lang="ts">
-import { supabase } from '../services/supabase'
-import { useAccounts } from '../stores/useAccounts'
-import { storeToRefs } from 'pinia'
-import { data } from '../data/useData'
-import { onMounted, ref } from 'vue'
-
-defineProps({
-  openValue: {
-    default: false,
-    type: Boolean,
-  },
-})
-
-// defineEmits(['hideModal'])
-
-const onSubmit = () => {
-  accounts.saveAccount()
-  onReset()
-}
-const onReset = () => {
-  accounts.$reset()
-  accounts.getRows()
-}
-const accounts = useAccounts()
-const prefs = data()
-const {
-  isOpen,
-  companyName,
-  companyAddress,
-  companyPhone,
-  companyEmail,
-  companyNotes,
-  companyPaymentMethod,
-  companyPaymentTerms,
-  companyAccountNumber,
-  individualFirstName,
-  individualLastName,
-  individualEmail,
-  individualPhone,
-} = storeToRefs(accounts)
-
-const loading = ref(true)
-const user = ref(null)
-async function getAccountNumber() {
-  try {
-    loading.value = true
-    user.value = supabase.auth.user()
-    const { data, error, status } = await supabase
-      .from('profiles')
-      .select('account_number')
-      .eq('user_id', user.value.id)
-      .single()
-
-    if (error && status !== 406) {
-      console.log(error)
-      return
-    }
-
-    if (data) {
-      const { account_number } = data
-      companyAccountNumber.value = account_number
-      console.log(account_number)
-    }
-  } catch (error) {
-    alert(error.message)
-  } finally {
-    loading.value = false
-  }
-}
-onMounted(() => {
-  getAccountNumber()
-})
-</script>

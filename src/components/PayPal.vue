@@ -1,12 +1,3 @@
-<template>
-  <q-page class="flex-center">
-    <q-card class="mx-auto" style="max-width: 36rem">
-      <q-card-section>
-        <div id="paypal-button" ref="myPaypal"></div>
-      </q-card-section>
-    </q-card>
-  </q-page>
-</template>
 <script setup lang="ts">
 import { loadScript, PayPalNamespace } from '@paypal/paypal-js'
 import { onMounted, ref } from 'vue'
@@ -15,8 +6,6 @@ const loadScriptOptions = {
   vault: true,
   currency: 'CAD',
   'buyer-country': 'CA',
-  // components: ['buttons'],
-  // 'data-namespace': 'paypal_sdk',
   'client-id':
     'AW0hEHQUIkWRqLggFOtU3toB24TPPdTHCHu6wh2Wj5eXAA-ScWOiTVkrz0woXz0H1NDDmQ-dJdQO32CM',
   'data-client-token':
@@ -24,10 +13,6 @@ const loadScriptOptions = {
 }
 
 const myPaypal = ref(null)
-
-onMounted(() => {
-  loadPaypal()
-})
 
 const loadPaypal = async () => {
   let paypal: PayPalNamespace
@@ -37,7 +22,6 @@ const loadPaypal = async () => {
   } catch (error) {
     console.error('failed to load the PayPal JS SDK script', error)
   }
-
   if (paypal) {
     try {
       await paypal
@@ -65,4 +49,18 @@ const loadPaypal = async () => {
     }
   }
 }
+
+onMounted(() => {
+  loadPaypal()
+})
 </script>
+
+<template>
+  <q-page class="flex-center">
+    <q-card class="mx-auto" style="max-width: 36rem">
+      <q-card-section>
+        <div id="paypal-button" ref="myPaypal"></div>
+      </q-card-section>
+    </q-card>
+  </q-page>
+</template>

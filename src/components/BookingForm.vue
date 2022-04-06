@@ -1,3 +1,53 @@
+<script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useMap } from '../stores/useMap'
+import { useAccounts } from '../stores/useAccounts'
+import { data } from '../data/useData'
+import { ref } from 'vue'
+
+const accounts = useAccounts()
+const { contactFirstName, contactLastName, contactEmail, contactPhone } =
+  storeToRefs(accounts)
+
+const store = useMap()
+
+const prefs = data()
+
+const fareInfo = ref([
+  {
+    itemLabel: 'Flat Rate',
+    name: 'flat_rate',
+    rate: 0,
+    id: 1,
+  },
+
+  {
+    itemLabel: 'Gratuity',
+    name: 'gratuity',
+    rate: 0,
+    id: 2,
+  },
+  {
+    itemLabel: 'Toll Fees',
+    name: 'toll_fees',
+    rate: 0,
+    id: 3,
+  },
+  {
+    itemLabel: 'HST',
+    name: 'hst',
+    rate: 0,
+    id: 4,
+  },
+  {
+    itemLabel: 'Total',
+    name: 'total',
+    rate: 0,
+    id: 5,
+  },
+])
+</script>
+
 <template>
   <q-form class="bg-white row q-gutter-md" flat>
     <!-- column one -->
@@ -410,52 +460,3 @@
     </q-card>
   </q-form>
 </template>
-
-<script setup lang="ts">
-import { storeToRefs } from 'pinia'
-import { useMap } from '../stores/useMap'
-import { useAccounts } from '../stores/useAccounts'
-import { data } from '../data/useData'
-
-// const counterStore = useCounterStore()
-const accounts = useAccounts()
-const { contactFirstName, contactLastName, contactEmail, contactPhone } =
-  storeToRefs(accounts)
-
-const store = useMap()
-const prefs = data()
-
-const fareInfo = $ref([
-  {
-    itemLabel: 'Flat Rate',
-    name: 'flat_rate',
-    rate: 0,
-    id: 1,
-  },
-
-  {
-    itemLabel: 'Gratuity',
-    name: 'gratuity',
-    rate: 0,
-    id: 2,
-  },
-  {
-    itemLabel: 'Toll Fees',
-    name: 'toll_fees',
-    rate: 0,
-    id: 3,
-  },
-  {
-    itemLabel: 'HST',
-    name: 'hst',
-    rate: 0,
-    id: 4,
-  },
-  {
-    itemLabel: 'Total',
-    name: 'total',
-    rate: 0,
-    id: 5,
-  },
-])
-</script>

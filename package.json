@@ -17,6 +17,7 @@
     "@quasar/extras": "^1.13.5",
     "@supabase/supabase-js": "^1.33.3",
     "@vueauth/supabase": "^1.0.0-alpha.20",
+    "particles.js": "^2.0.0",
     "pinia": "^2.0.13",
     "quasar": "^2.6.5",
     "vue": "^3.2.31",

@@ -1,4 +1,215 @@
-<!--suppress ALL -->
+<script setup lang="ts">
+import { useMap } from '../stores/useMap'
+import { storeToRefs } from 'pinia'
+import { useCounterStore } from '../stores/counter'
+import { usePriceCalculator } from '../stores/usePriceCalculator'
+import { data } from '../data/useData'
+import { ref, reactive } from 'vue'
+import { loader } from '../composables/useGoogleMap'
+import Alert from './MyAlert.vue'
+
+const isClosed = ref(true)
+const total = usePriceCalculator()
+const counter = useCounterStore()
+const store = useMap()
+const prefs = data()
+const onReset = () => {
+  total.$reset()
+  store.$reset()
+}
+
+const {
+  sedDistTotal,
+  suvDistTotal,
+  premSedanDistTotal,
+  premSuvDistTotal,
+  sedTimeTotal,
+  suvTimeTotal,
+  premSedanTimeTotal,
+  premSuvTimeTotal,
+} = storeToRefs(total)
+
+const vehicle = ref('sedan')
+
+const options = reactive([
+  {
+    label: 'Sedan',
+    value: 'sedan',
+    id: 1,
+    caption: 'Vehicles include Cadillac XTS or similar',
+    distanceSubTotal: sedDistTotal,
+    hourlySubTotal: sedTimeTotal,
+    gratuity: total.gratuity,
+    taxes: total.taxes,
+    kmCost: 1.7,
+    timeCost: 80,
+    minKm: 25,
+  },
+  {
+    label: 'SUV',
+    value: 'suv',
+    id: 2,
+    caption: 'Vehicles include Chevy Suburban or similar',
+    distanceSubTotal: suvDistTotal,
+    hourlySubTotal: suvTimeTotal,
+    gratuity: total.gratuity,
+    taxes: total.taxes,
+    kmCost: 2.75,
+    timeCost: 105,
+    minKm: 25,
+  },
+  {
+    label: 'Premium Sedan',
+    value: 'premium_sedan',
+    id: 3,
+    caption: 'Vehicles include Lincoln Continental or similar',
+    distanceSubTotal: premSedanDistTotal,
+    hourlySubTotal: premSedanTimeTotal,
+    gratuity: total.gratuity,
+    taxes: total.taxes,
+    kmCost: 1.85,
+    timeCost: 95,
+    minKm: 25,
+  },
+  {
+    label: 'Premium SUV',
+    value: 'premium_suv',
+    id: 4,
+    caption: 'Vehicles include Lincoln Navigator or similar',
+    distanceSubTotal: premSuvDistTotal,
+    hourlySubTotal: premSuvTimeTotal,
+    gratuity: total.gratuity,
+    taxes: total.taxes,
+    kmCost: 3,
+    timeCost: 125,
+    minKm: 25,
+  },
+])
+
+const {
+  originInput,
+  originAutocomplete,
+  destinationAutocomplete,
+  destinationInput,
+  luggageCount,
+  passengerCount,
+  date,
+  selectedServiceType,
+  selectedOriginAddress,
+  selectedDestinationAddress,
+  place,
+  routeDistance,
+  routeDuration,
+  firstName,
+  tripNotes,
+} = storeToRefs(store)
+
+const myMap = ref<HTMLElement>(null)
+
+loader.load().then(() => {
+  const map = new google.maps.Map(myMap.value, {
+    mapTypeControl: false,
+    fullscreenControl: false,
+    zoomControl: false,
+    streetViewControl: false,
+    center: { lat: 43.65107, lng: -79.347015 },
+    zoom: 9,
+  })
+  new AutocompleteDirectionsHandler(map)
+})
+
+class AutocompleteDirectionsHandler {
+  map: unknown
+  originPlaceId: string
+  destinationPlaceId: string
+  travelMode: google.maps.TravelMode
+  directionsService: google.maps.DirectionsService
+  directionsRenderer: google.maps.DirectionsRenderer
+
+  constructor(map: google.maps.Map) {
+    this.map = map
+    this.originPlaceId = ''
+    this.destinationPlaceId = ''
+    this.travelMode = google.maps.TravelMode.DRIVING
+    this.directionsService = new google.maps.DirectionsService()
+    this.directionsRenderer = new google.maps.DirectionsRenderer()
+    this.directionsRenderer.setMap(map)
+    // console.log(map)
+
+    originInput.value = document.getElementById('origin-input')
+    originAutocomplete.value = new google.maps.places.Autocomplete(
+      originInput.value as HTMLInputElement
+    )
+    // Specify just the place data fields that you need.
+    originAutocomplete.value.setFields(['all'])
+    this.setupPlaceChangedListener(originAutocomplete.value, 'ORIG')
+
+    destinationInput.value = document.getElementById('destination-input')
+    destinationAutocomplete.value = new google.maps.places.Autocomplete(
+      destinationInput.value as HTMLInputElement
+    )
+    // Specify just the place data fields that you need.
+    destinationAutocomplete.value.setFields(['all'])
+    this.setupPlaceChangedListener(destinationAutocomplete.value, 'DEST')
+  }
+
+  // Sets a listener on a radio button to change the filter type on Places
+  // Autocomplete.
+  setupPlaceChangedListener(
+    autocomplete: {
+      bindTo: (arg0: string, arg1: unknown) => void
+      addListener: (arg0: string, arg1: () => void) => void
+      getPlace: () => unknown
+    },
+    mode: string
+  ) {
+    autocomplete.bindTo('bounds', this.map)
+    autocomplete.addListener('place_changed', () => {
+      place.value = autocomplete.getPlace()
+
+      if (!place.value.place_id) {
+        window.alert('Please select an option from the dropdown list.')
+        return
+      }
+
+      if (mode === 'ORIG') {
+        this.originPlaceId = place.value.place_id
+      } else {
+        this.destinationPlaceId = place.value.place_id
+      }
+      this.route()
+    })
+  }
+
+  route() {
+    if (!this.originPlaceId || !this.destinationPlaceId) {
+      return
+    }
+
+    this.directionsService.route(
+      {
+        origin: { placeId: this.originPlaceId },
+        destination: { placeId: this.destinationPlaceId },
+        travelMode: this.travelMode,
+      },
+      (response, status) => {
+        if (status === 'OK') {
+          this.directionsRenderer.setDirections(response)
+          routeDistance.value = response.routes[0].legs[0].distance.text
+          routeDuration.value = response.routes[0].legs[0].duration.text
+          selectedOriginAddress.value = response.routes[0].legs[0].start_address
+          selectedDestinationAddress.value =
+            response.routes[0].legs[0].end_address
+          // console.log(response.routes[0].legs[0].steps)
+        } else {
+          window.alert('Directions request failed due to ' + status)
+        }
+      }
+    )
+  }
+}
+</script>
+
 <template>
   <q-form
     class="row q-gutter-md q-pa-sm"
@@ -272,6 +483,7 @@
                   self="top middle"
                   :delay="500"
                 >
+                  <!--suppress JSUnresolvedFunction -->
                   <span>Basefare: {{ option.distanceSubTotal.toFixed(2) }}</span
                   ><br />
                   <span
@@ -309,220 +521,3 @@
   </q-form>
   <Alert message="Your Quote Has Been Saved" :my-alert="store.myAlert" />
 </template>
-
-<script setup lang="ts">
-import { useMap } from '../stores/useMap'
-import { storeToRefs } from 'pinia'
-import { useCounterStore } from '../stores/counter'
-import { usePriceCalculator } from '../stores/usePriceCalculator'
-import { data } from '../data/useData'
-import { ref, reactive } from 'vue'
-import { loader } from '../composables/useGoogleMap'
-import Alert from './MyAlert.vue'
-
-// import { QInput } from 'quasar'
-//
-// console.log(QInput)
-//TODO: Add price calculation function possible composable, add enable and disable buttons
-
-const isClosed = ref(true)
-const total = usePriceCalculator()
-const counter = useCounterStore()
-const store = useMap()
-const prefs = data()
-const onReset = () => {
-  total.$reset()
-  store.$reset()
-}
-
-const {
-  sedDistTotal,
-  suvDistTotal,
-  premSedanDistTotal,
-  premSuvDistTotal,
-  sedTimeTotal,
-  suvTimeTotal,
-  premSedanTimeTotal,
-  premSuvTimeTotal,
-} = storeToRefs(total)
-
-const vehicle = ref('sedan')
-
-const options = reactive([
-  {
-    label: 'Sedan',
-    value: 'sedan',
-    id: 1,
-    caption: 'Vehicles include Cadillac XTS or similar',
-    distanceSubTotal: sedDistTotal,
-    hourlySubTotal: sedTimeTotal,
-    gratuity: total.gratuity,
-    taxes: total.taxes,
-    kmCost: 1.7,
-    timeCost: 80,
-    minKm: 25,
-  },
-  {
-    label: 'SUV',
-    value: 'suv',
-    id: 2,
-    caption: 'Vehicles include Chevy Suburban or similar',
-    distanceSubTotal: suvDistTotal,
-    hourlySubTotal: suvTimeTotal,
-    gratuity: total.gratuity,
-    taxes: total.taxes,
-    kmCost: 2.75,
-    timeCost: 105,
-    minKm: 25,
-  },
-  {
-    label: 'Premium Sedan',
-    value: 'premium_sedan',
-    id: 3,
-    caption: 'Vehicles include Lincoln Continental or similar',
-    distanceSubTotal: premSedanDistTotal,
-    hourlySubTotal: premSedanTimeTotal,
-    gratuity: total.gratuity,
-    taxes: total.taxes,
-    kmCost: 1.85,
-    timeCost: 95,
-    minKm: 25,
-  },
-  {
-    label: 'Premium SUV',
-    value: 'premium_suv',
-    id: 4,
-    caption: 'Vehicles include Lincoln Navigator or similar',
-    distanceSubTotal: premSuvDistTotal,
-    hourlySubTotal: premSuvTimeTotal,
-    gratuity: total.gratuity,
-    taxes: total.taxes,
-    kmCost: 3,
-    timeCost: 125,
-    minKm: 25,
-  },
-])
-
-const {
-  originInput,
-  originAutocomplete,
-  destinationAutocomplete,
-  destinationInput,
-  luggageCount,
-  passengerCount,
-  date,
-  selectedServiceType,
-  selectedOriginAddress,
-  selectedDestinationAddress,
-  place,
-  routeDistance,
-  routeDuration,
-  firstName,
-  tripNotes,
-} = storeToRefs(store)
-
-const myMap = ref<HTMLElement>(null)
-
-loader.load().then(() => {
-  const map = new google.maps.Map(myMap.value, {
-    mapTypeControl: false,
-    fullscreenControl: false,
-    zoomControl: false,
-    streetViewControl: false,
-    center: { lat: 43.65107, lng: -79.347015 },
-    zoom: 9,
-  })
-  new AutocompleteDirectionsHandler(map)
-})
-
-class AutocompleteDirectionsHandler {
-  map: unknown
-  originPlaceId: string
-  destinationPlaceId: string
-  travelMode: google.maps.TravelMode
-  directionsService: google.maps.DirectionsService
-  directionsRenderer: google.maps.DirectionsRenderer
-
-  constructor(map: google.maps.Map) {
-    this.map = map
-    this.originPlaceId = ''
-    this.destinationPlaceId = ''
-    this.travelMode = google.maps.TravelMode.DRIVING
-    this.directionsService = new google.maps.DirectionsService()
-    this.directionsRenderer = new google.maps.DirectionsRenderer()
-    this.directionsRenderer.setMap(map)
-    // console.log(map)
-
-    originInput.value = document.getElementById('origin-input')
-    originAutocomplete.value = new google.maps.places.Autocomplete(
-      originInput.value as HTMLInputElement
-    )
-    // Specify just the place data fields that you need.
-    originAutocomplete.value.setFields(['all'])
-    this.setupPlaceChangedListener(originAutocomplete.value, 'ORIG')
-
-    destinationInput.value = document.getElementById('destination-input')
-    destinationAutocomplete.value = new google.maps.places.Autocomplete(
-      destinationInput.value as HTMLInputElement
-    )
-    // Specify just the place data fields that you need.
-    destinationAutocomplete.value.setFields(['all'])
-    this.setupPlaceChangedListener(destinationAutocomplete.value, 'DEST')
-  }
-
-  // Sets a listener on a radio button to change the filter type on Places
-  // Autocomplete.
-  setupPlaceChangedListener(
-    autocomplete: {
-      bindTo: (arg0: string, arg1: unknown) => void
-      addListener: (arg0: string, arg1: () => void) => void
-      getPlace: () => unknown
-    },
-    mode: string
-  ) {
-    autocomplete.bindTo('bounds', this.map)
-    autocomplete.addListener('place_changed', () => {
-      place.value = autocomplete.getPlace()
-
-      if (!place.value.place_id) {
-        window.alert('Please select an option from the dropdown list.')
-        return
-      }
-
-      if (mode === 'ORIG') {
-        this.originPlaceId = place.value.place_id
-      } else {
-        this.destinationPlaceId = place.value.place_id
-      }
-      this.route()
-    })
-  }
-
-  route() {
-    if (!this.originPlaceId || !this.destinationPlaceId) {
-      return
-    }
-
-    this.directionsService.route(
-      {
-        origin: { placeId: this.originPlaceId },
-        destination: { placeId: this.destinationPlaceId },
-        travelMode: this.travelMode,
-      },
-      (response, status) => {
-        if (status === 'OK') {
-          this.directionsRenderer.setDirections(response)
-          routeDistance.value = response.routes[0].legs[0].distance.text
-          routeDuration.value = response.routes[0].legs[0].duration.text
-          selectedOriginAddress.value = response.routes[0].legs[0].start_address
-          selectedDestinationAddress.value =
-            response.routes[0].legs[0].end_address
-          // console.log(response.routes[0].legs[0].steps)
-        } else {
-          window.alert('Directions request failed due to ' + status)
-        }
-      }
-    )
-  }
-}
-</script>

@@ -125,6 +125,7 @@ const loading = computed(
     facebookLoading.value
 )
 </script>
+
 <template>
   <q-card-section>
     <h2 class="font-bold text-center q-mb-md text-h5 text-grey-9">

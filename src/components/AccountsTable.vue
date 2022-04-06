@@ -89,34 +89,27 @@ import { useAuthStore } from '../stores/useAuth'
 import { useAccounts } from '../stores/useAccounts'
 import AddAccountModal from 'components/AddAccountModal.vue'
 
-const isGrid = ref(false)
+const accounts = useAccounts()
+const isOpen = ref(false)
 
+//adding the ability to change the view to grid from table
+const isGrid = ref(false)
 function setGrid() {
   isGrid.value = !isGrid.value
 }
 
-const isOpen = ref(false)
-
+//adding the ability to change the view to fullscreen from table
 const isFullscreen = ref(false)
-
 function setFullscreen() {
   isFullscreen.value = !isFullscreen.value
-  console.log('setFullscreen')
 }
 
-onMounted(() => {
-  getRows()
-  console.log(getRows())
-})
-
+//get the data for the tables from supabase
 const { supabase } = useAuthStore()
 const store = reactive({
   user: null,
 })
 const loading = ref(false)
-
-const accounts = useAccounts()
-
 async function getRows() {
   try {
     loading.value = true
@@ -133,7 +126,6 @@ async function getRows() {
       console.log(error)
       return
     }
-
     if (data) {
       accounts.rows = data
       console.log(accounts.rows)
@@ -144,12 +136,18 @@ async function getRows() {
     loading.value = false
   }
 }
+onMounted(() => {
+  getRows()
+  console.log(getRows())
+})
 
+//add pagination to the table
 const pagination = {
   rowsPerPage: 15,
   sortBy: 'account_number',
 }
 
+//add the info for the columns in the table
 const columns = [
   {
     name: 'account_number',

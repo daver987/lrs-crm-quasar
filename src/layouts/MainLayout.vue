@@ -1,4 +1,3 @@
-<!--suppress ALL -->
 <script setup lang="ts">
 import { onMounted, Ref, ref } from 'vue'
 import { RouterView } from 'vue-router'
@@ -8,12 +7,11 @@ import { useAccounts } from '../stores/useAccounts'
 import { useUserStore } from '../stores/useUserStore'
 import { menu } from '../data/menu'
 
-// console.log(supabase.auth.currentUser.identities[0].id)
 const price = usePriceCalculator()
 const accounts = useAccounts()
 const user = useUserStore()
 const menuItems = menu()
-// console.log(user)
+
 const src: Ref<string> = ref('')
 const path: Ref<string> = ref('')
 
@@ -35,9 +33,6 @@ onMounted(() => {
   downloadImage()
 })
 
-// const avatarUrl = ref(
-//   'https://qiqfchmzgciceiftjszj.supabase.co/storage/v1/object/avatars/'
-// )
 const leftDrawerOpen = ref(true)
 
 const miniMode = ref(false)
