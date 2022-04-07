@@ -360,7 +360,7 @@ import { useCounterStore } from '../stores/counter'
 import { usePriceCalculator } from '../stores/usePriceCalculator'
 import { data } from '../data/useData'
 import MyAlert from 'components/MyAlert.vue'
-import { loader } from 'src/composables/loader'
+import { loader } from '../composables/loader'
 
 //TODO: Add price calculation function possible composable, add enable and disable buttons
 
